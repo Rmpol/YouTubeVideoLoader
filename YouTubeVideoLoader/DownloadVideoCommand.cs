@@ -1,24 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using YoutubeExplode;
+﻿using YoutubeExplode;
 using YoutubeExplode.Converter;
 
 namespace YouTubeVideoLoader
 {
-    public class DownloadVideoCommand : ICommand
+    // Конкретная команда для скачивания видео
+    public class DownloadVideoCommand : Command
     {
-        public async Task ExecuteAsync(string videoUrl)
+        public override async Task ExecuteAsync(string videoUrl)
         {
+            // В этой команде добавляем возможность отмены операции
+            SetCancellationTokenSource();
+
             var client = new YoutubeClient();
             var videos = client.Videos;
-            var outputPath = "downloaded_video.mp4";
 
-            await videos.DownloadAsync(videoUrl, outputPath, builder => builder.SetPreset(ConversionPreset.UltraFast));
+            // Добавляем подпапку к пути
+            var outputPath = AppDomain.CurrentDomain.BaseDirectory;
 
-            Console.WriteLine($"Video downloaded to: {outputPath}");
+            try
+            {
+                await videos.DownloadAsync(videoUrl, outputPath, builder => builder.SetPreset(ConversionPreset.UltraFast), cancellationToken: GetCancellationToken());
+                Console.WriteLine($"Video downloaded to: {outputPath}");
+            }
+            catch (OperationCanceledException)
+            {
+                Console.WriteLine("Download canceled.");
+            }
+            finally
+            {
+                // Важно освободить ресурсы, даже если операция была отменена
+                Dispose();
+            }
         }
     }
 }

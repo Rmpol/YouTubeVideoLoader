@@ -24,7 +24,19 @@ class Program
                 await invoker.GetVideoInfo(videoUrl);
                 break;
             case "2":
-                await invoker.DownloadVideo(videoUrl);
+                // Запускаем скачивание видео
+                var downloadTask = invoker.DownloadVideo(videoUrl);
+
+                // Возможность отмены
+                Console.WriteLine("Press 'C' to cancel download.");
+                if (Console.ReadKey().KeyChar == 'C')
+                {
+                    downloadCommand.Cancel(); // Отмена скачивания
+                }
+                else
+                {
+                    await downloadTask; // Дождаться завершения скачивания
+                }
                 break;
             default:
                 Console.WriteLine("Invalid option");

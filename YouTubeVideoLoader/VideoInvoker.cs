@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace YouTubeVideoLoader
 {
+    // Класс Invoker
     public class VideoInvoker
     {
-        private ICommand _getInfoCommand;
-        private ICommand _downloadCommand;
+        private Command _getInfoCommand;
+        private Command _downloadCommand;
 
-        public VideoInvoker(ICommand getInfoCommand, ICommand downloadCommand)
+        public VideoInvoker(Command getInfoCommand, Command downloadCommand)
         {
             _getInfoCommand = getInfoCommand;
             _downloadCommand = downloadCommand;

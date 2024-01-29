@@ -7,10 +7,12 @@ using YoutubeExplode;
 
 namespace YouTubeVideoLoader
 {
-    public class GetVideoInfoCommand : ICommand
+    // Конкретная команда для получения информации о видео
+    public class GetVideoInfoCommand : Command
     {
-        public async Task ExecuteAsync(string videoUrl)
+        public override async Task ExecuteAsync(string videoUrl)
         {
+            // Допустим, в этой команде нет необходимости отмены операции
             var client = new YoutubeClient();
             var video = await client.Videos.GetAsync(videoUrl);
 
